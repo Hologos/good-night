@@ -8,5 +8,5 @@ If you want to increase the time, simply press a button and it adds 15 more minu
 
 ```
 # shuts down the OS in 30 minutes
-good-night.sh 30
+sudo good-night.sh 30
 ```
