@@ -32,7 +32,6 @@ control_c()
 
 trap control_c SIGINT
 
-cycle_timeout=5
 extra_time=15
 countdown="$(($1 * 60))"
 
@@ -54,8 +53,8 @@ while true; do
 
     write_line "System is gonna be shut down in $countdown seconds."
 
-    sleep "$cycle_timeout"
-    countdown="$(($countdown - $cycle_timeout))"
+    sleep 1
+    countdown="$(($countdown - 1))"
     key_pressed=""
 done
 
