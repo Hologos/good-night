@@ -25,19 +25,40 @@ function write_line()
     fi
 }
 
-cycle_timeout=5
+control_c()
+{
+    stty sane
+}
+
+trap control_c SIGINT
+
+extra_time=15
 countdown="$(($1 * 60))"
 
+# non-blocking stty
+stty -icanon time 0 min 0
+
 while true; do
+    read key_pressed
+
     if [[ "$countdown" -le 0 ]]; then
         write_line "SHUTDOWN!" 1
         break
     fi
 
+    if [[ "$key_pressed" != "" ]]; then
+        countdown="$(($countdown + $extra_time * 60))"
+        write_line "Adding extra $extra_time minutes." 1
+    fi
+
     write_line "System is gonna be shut down in $countdown seconds."
 
-    sleep "$cycle_timeout"
-    countdown="$(($countdown - $cycle_timeout))"
+    sleep 1
+    countdown="$(($countdown - 1))"
+    key_pressed=""
 done
+
+# set the stty back to normal
+stty sane
 
 shutdown -h now
