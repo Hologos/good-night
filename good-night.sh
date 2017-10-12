@@ -25,6 +25,36 @@ function write_line()
     fi
 }
 
+function gen_time_message_part()
+{
+    minutes="$1"
+    seconds="$2"
+
+    message=""
+
+    if [[ "$minutes" -gt 0 ]]; then
+        units="minutes"
+
+        if [[ "$minutes" -eq 1 ]]; then
+            units="minute"
+        fi
+
+        message="${message} ${minutes} ${units}"
+    fi
+
+    if [[ "$seconds" -gt 0 ]]; then
+        units="seconds"
+
+        if [[ "$seconds" -eq 1 ]]; then
+            units="second"
+        fi
+
+        message="${message} ${seconds} ${units}"
+    fi
+
+    echo -n "$message"
+}
+
 control_c()
 {
     stty sane
@@ -51,7 +81,11 @@ while true; do
         write_line "Adding extra $extra_time minutes." 1
     fi
 
-    write_line "System is gonna be shut down in $countdown seconds."
+    minutes="$(($countdown / 60))"
+    seconds="$(($countdown % 60))"
+    time_message_part="$(gen_time_message_part "$minutes" "$seconds")"
+
+    write_line "System is gonna be shut down in${time_message_part}."
 
     sleep 1
     countdown="$(($countdown - 1))"
