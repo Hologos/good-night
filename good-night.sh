@@ -58,6 +58,8 @@ function gen_time_message_part()
 control_c()
 {
     stty sane
+    echo
+    exit 1
 }
 
 trap control_c SIGINT
