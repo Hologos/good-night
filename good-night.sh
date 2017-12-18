@@ -55,6 +55,19 @@ function gen_time_message_part()
     echo -n "$message"
 }
 
+ALERT_SHUTDOWN="alert-shutdown"
+
+function voice_alert()
+{
+    alert="$1"
+
+    case "$alert" in
+        "$ALERT_SHUTDOWN")
+            say "*"
+        ;;
+    esac
+}
+
 control_c()
 {
     stty sane
@@ -72,6 +85,10 @@ stty -icanon time 0 min 0
 
 while true; do
     read key_pressed
+
+    if [[ "$countdown" -eq 300 ]] || [[ "$countdown" -eq 150 ]]; then
+        voice_alert "$ALERT_SHUTDOWN"
+    fi
 
     if [[ "$countdown" -le 0 ]]; then
         write_line "SHUTDOWN!" 1
